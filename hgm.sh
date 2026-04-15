@@ -6,10 +6,16 @@ echo
 
 guesses=5
 guessed=""
+masked=""
 
-while (( guesses > 0 )); do
+for (( i=0; i<${#mystery}; i++ )); do
+    masked+="_"
+done
+
+while [[ guesses > 0 ]]; do
     echo "-----------------"
     echo "Guesses: $guesses"
+    echo "$masked"
     read -n 1 -p "Type guess: " guess
 
     if [[ $mystery == *"$guess"* ]]; then
@@ -37,5 +43,14 @@ while (( guesses > 0 )); do
         fi
     done
 
-    echo "$masked"
+    # Win condition - no underscores in masked word
+    if [[ $masked != *"_"* ]]; then
+        echo
+        echo "Congratulations! You have guessed the word: $mystery."
+        exit 0
+    fi
 done
+
+# Lose game if gueeses run out
+echo
+echo "GAME OVER! - All guesses have been exhausted, The word was: $mystery."
